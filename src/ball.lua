@@ -56,9 +56,6 @@ function Ball:checkBallPressed(point)
 end
 
 function Ball:draw_frameset()
-    -- TODO: Keep this?
-    love.graphics.setColor(200, 10, 10, 0.9)
-    love.graphics.circle("fill", self.pos.x, self.pos.y, self.radius)
 
     local frame
 
@@ -68,6 +65,17 @@ function Ball:draw_frameset()
     if frame ~= nil then
 	self:default_draw(frame.image, frame.quad)
     end
+end
+
+function Ball:drawAimLine()
+
+    target_x = self.pos.x + (self.pos.x - love.mouse.getX())
+    target_y = self.pos.y + (self.pos.y - love.mouse.getY())
+
+    love.graphics.setColor(244, 244, 244, 0.5)
+    love.graphics.setLineWidth(8)
+    love.graphics.line(self.pos.x, self.pos.y, target_x, target_y)
+    love.graphics.setColor(244, 244, 244, 1)
 end
 
 function Ball:update(...) 
@@ -104,6 +112,10 @@ function Ball:default_draw(image, quad, pos)
     if quad == nil
     then love.graphics.draw(image, pos.x, pos.y, 0, 1, 1, ox, oy)
     else love.graphics.draw(image, quad, pos.x, pos.y, 0, 1, 1, ox, oy)
+    end
+
+    if(self.current_status_name == "transforming") then
+        self:drawAimLine()
     end
 end
 
@@ -166,9 +178,8 @@ Ball.states = {
 
 	    local image = ball.assets.images.just_eyes
 	    local dt = love.timer.getTime() - ball.status_change_time
-	    local moveLen = 8.0
-	    local moveTime = 0.6
-	    local pos = ball.pos + ball:get_dir_vector() * ((dt % moveTime)/moveTime - 0.5) * 10
+	    local moveTime = 1
+	    local pos = ball.pos + ball.speed * ball:get_dir_vector() * ((dt % moveTime)/moveTime - 0.5) * 10
 	    ball:default_draw(image, nil, pos)
 	    love.graphics.setStencilTest()
 	end
