@@ -1,15 +1,15 @@
 ---! ball
 Object = require("src/classic")
 Vector = require("src/vector")
+printf = require("src/printf")
+GMath = require 'src/gmath'
+HC = require 'ext/HC'
 
 Ball = Object:extend()
 
-Ball.set_assets = function(assets) 
+Ball.set_assets = function(assets)
     Ball.super.assets = assets
 end
--- function Ball:set_assets(assets)
---     Ball.assets = assets 
--- end
 
 local function getMousePos()
     return Vector(love.mouse.getPosition())
@@ -18,15 +18,37 @@ end
 function Ball:new()
     self.pos = Vector.new(100, 100)
     self.radius = 50
+    self.shape = HC.circle(self.pos.x, self.pos.y, self.radius)
     self.selected = false
-    self.direction = 0.0
+    self.direction = Vector.new(0.0, 0.0)
     self.speed = 0.0
-    self.friction_factor = 1
+    self.friction_factor = 10
     self:set_status('idle')
 end
 
+
+function Ball:on_collision(separating_vector)
+    assert(self)
+    print("Separating vector: ", separating_vector:as_string())
+    if GMath.abs(separating_vector.y) > 0.1 then
+        self.direction.y =  self.direction.y * -GMath.sign(separating_vector.y)
+    end
+    if GMath.abs(separating_vector.x) > 0.1 then
+        self.direction.x =  self.direction.x * -GMath.sign(separating_vector.x)
+    end
+    -- print("on collision")
+end
+
+function Ball:as_collider()
+    return {
+        shape = self.shape,
+        on_collision = function(x) self:on_collision(x) end
+    }
+end
+
 function Ball:get_dir_vector()
-    return Vector.fromAngle(self.direction) * self.speed
+    -- return Vector.fromAngle(self.direction) * self.speed
+    return self.direction
 end
 
 function Ball:checkBallPressed(point)
@@ -48,7 +70,11 @@ function Ball:draw_frameset()
     end
 end
 
-function Ball:update(...) self.current_status.update(self, ...) end
+function Ball:update(...) 
+    self.current_status.update(self, ...)
+    self.shape:moveTo(self.pos.x, self.pos.y)
+end
+
 function Ball:draw(...) self.current_status.draw(self, ...) end
 function Ball:set_status(state_name)
     local state = self.states[state_name]
@@ -103,17 +129,23 @@ Ball.states = {
 	draw = function (ball) ball:draw_frameset() end,
 	update = function(ball, dt)
 	    if not love.mouse.isDown(1) then
-		local delta = ball.pos - getMousePos()
-		ball.direction = delta:heading()
-		ball.speed = delta:getmag()
+        local delta = ball.pos - getMousePos()
+
+        -- ball.direction = delta:heading()
+        ball.direction = delta:norm()
+
+        local speed = 1000
+		ball.speed = delta:getmag() * speed
 		ball:set_status('rolling')
 	    end
 	end
     },
     rolling = {
 	start = function(ball) ball.current_frameset = nil end,
-	update = function(ball, dt)
-	    ball.pos = ball.pos + ball.speed * dt * ball:get_dir_vector()
+    update = function(ball, dt)
+        dir_vector = ball:get_dir_vector()
+        -- print("dir vector: ", dir_vector:as_string())
+	    ball.pos = ball.pos + ball.speed * dt * dir_vector
 	    ball.speed = ball.speed - ball.friction_factor
 	    if ball.speed <= 0 then
 		ball:set_status('idle')

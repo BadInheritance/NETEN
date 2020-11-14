@@ -202,6 +202,9 @@ function vector:unpack()
   return self.x, self.y
 end
 
+function vector:as_string()
+  return string.format("(%f, %f)", self.x, self.y)
+end 
 
 -- pack up and return module
 module.new = new

@@ -36,7 +36,9 @@ function love.load()
     ball.pos.y = 300
     GameState.ball = ball
 
-    Physics.init()
+    Physics.init({debug_draw_enabled=true})
+
+    Physics.add_collider(ball:as_collider())
 end
 
 
@@ -51,6 +53,7 @@ end
 
 function love.update(dt)
     local level_running = GameState.level.state == "RUNNING"
+    Physics.update(dt)
     update_time(GameState, level_running, dt)
     Level.update_level(GameState.level)
     GameState.ball:update(dt)
