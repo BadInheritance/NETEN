@@ -142,9 +142,9 @@ Ball.states = {
     },
     rolling = {
 	start = function(ball) ball.current_frameset = nil end,
-    update = function(ball, dt)
-        dir_vector = ball:get_dir_vector()
-        -- print("dir vector: ", dir_vector:as_string())
+	update = function(ball, dt)
+	    dir_vector = ball:get_dir_vector()
+	    -- print("dir vector: ", dir_vector:as_string())
 	    ball.pos = ball.pos + ball.speed * dt * dir_vector
 	    ball.speed = ball.speed - ball.friction_factor
 	    if ball.speed <= 0 then
@@ -163,9 +163,9 @@ Ball.states = {
 
 	    local image = ball.assets.images.just_eyes
 	    local dt = love.timer.getTime() - ball.status_change_time
-	    local moveLen = 8.0
+	    local moveLen = frame.image:getWidth() / 2
 	    local moveTime = 0.6
-	    local pos = ball.pos + ball:get_dir_vector() * ((dt % moveTime)/moveTime - 0.5) * 10
+	    local pos = ball.pos + ball:get_dir_vector() * moveLen * ((dt % moveTime)/moveTime - 0.5)
 	    ball:default_draw(image, nil, pos)
 	    love.graphics.setStencilTest()
 	end
