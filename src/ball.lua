@@ -1,8 +1,15 @@
 ---! ball
 Object = require("src/classic")
-Vector = require("vector")
+Vector = require("src/vector")
 
 Ball = Object:extend()
+
+Ball.set_assets = function(assets) 
+    Ball.super.assets = assets
+end
+-- function Ball:set_assets(assets)
+--     Ball.assets = assets 
+-- end
 
 local function getMousePos()
     return Vector(love.mouse.getPosition())
@@ -78,7 +85,7 @@ Ball.states = {
     idle = {
 	start = function (ball)
 	     -- accessing assets?
-	    ball.current_frameset = GameState.assets.framesets.idle_frames
+	    ball.current_frameset = ball.assets.framesets.idle_frames
 	    ball.current_frameset:start()
 	end,
 	draw = function (ball) ball:draw_frameset() end,
@@ -90,7 +97,7 @@ Ball.states = {
     },
     transforming = {
 	start = function(ball)
-	    ball.current_frameset = GameState.assets.framesets.transform_frames
+	    ball.current_frameset = ball.assets.framesets.transform_frames
 	    ball.current_frameset:start()
 	end,
 	draw = function (ball) ball:draw_frameset() end,
@@ -113,7 +120,7 @@ Ball.states = {
 	    end
 	end,
 	draw = function(ball)
-	    local frame = GameState.assets.framesets.transform_frames.frames[9]
+	    local frame = ball.assets.framesets.transform_frames.frames[9]
 	    ball:default_draw(frame.image, frame.quad)
 
 	    local function drawMask()
@@ -122,7 +129,7 @@ Ball.states = {
 	    love.graphics.stencil(drawMask, 'replace', 1)
 	    love.graphics.setStencilTest('greater', 0)
 
-	    local image = GameState.assets.images.just_eyes
+	    local image = ball.assets.images.just_eyes
 	    local dt = love.timer.getTime() - ball.status_change_time
 	    local moveLen = 8.0
 	    local moveTime = 0.6

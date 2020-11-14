@@ -3,6 +3,10 @@ local utils = require('src/utils')
 
 local FrameSet = Object:extend()
 
+FrameSet.set_debug_options = function(arg)
+    FrameSet.super.enable_debug_print = arg.enable_debug_print
+end
+
 function FrameSet:new()
     self.frame_time = 1.0 / 15  -- in secs
     self.start_time = 0
@@ -41,7 +45,11 @@ end
 function FrameSet:get_current_frame()
     if #self.frames == 0 then error("Empty frameset") end
     local index = self:get_frame_index()
-    print('frame index', index)
+
+    if self.enable_debug_print then
+        print('frame index', index)
+    end
+
     return self.frames[index]
 end
 

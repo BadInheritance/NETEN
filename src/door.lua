@@ -1,5 +1,5 @@
 local module = {}
-Vector = require("vector")
+Vector = require("src/vector")
 
 local Door = {}
 
