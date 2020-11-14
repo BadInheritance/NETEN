@@ -38,10 +38,6 @@ end
 function Physics:init(args)
     self.debug_draw_enabled = args.debug_draw_enabled
     local window_size = Window.get_size()
-    Physics:add_rectangle(0, 0, window_size.x, 20)
-    Physics:add_rectangle(0, window_size.y - 20, window_size.x, 20)
-    Physics:add_rectangle(0, 20, 20, window_size.y - 40)
-    Physics:add_rectangle(window_size.x - 20, 20, 20, window_size.y - 40)
     -- Physics:add_rectangle(0, 0, 100, 20)
 end
 
@@ -82,6 +78,8 @@ PhysicsModule.init = function(...) PhysicsSingleton:init(...) end
 PhysicsModule.draw = function() PhysicsSingleton:draw() end
 
 PhysicsModule.update = function(...) PhysicsSingleton:update(...) end
+
+PhysicsModule.add_rectangle = function(...) PhysicsSingleton:add_rectangle(...) end
 
 PhysicsModule.add_collider = function(collider)
     PhysicsSingleton:add_collider(collider)

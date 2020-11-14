@@ -9,6 +9,7 @@ local Level = require "src/level"
 local Functional = require "src/functional"
 local Physics = require "src/physics"
 local Window = require "src/window"
+local WallManager = require "src/wall_manager"
 
 GameState = GameState.new() 
 
@@ -39,6 +40,13 @@ function love.load()
     Physics.init({debug_draw_enabled=true})
 
     Physics.add_collider(ball:as_collider())
+
+    window_size = Window:get_size()
+    GameState.wall_manager:add_wall(0, 0, window_size.x, 20)
+    GameState.wall_manager:add_wall(0, window_size.y - 20, window_size.x, 20)
+    GameState.wall_manager:add_wall(0, 20, 20, window_size.y - 40)
+    GameState.wall_manager:add_wall(window_size.x - 20, 20, 20, window_size.y - 40)
+
 end
 
 
@@ -89,6 +97,7 @@ function love.draw()
     love.graphics.setBackgroundColor( 0.5, 0.5, 0.5, 1)
 
     Physics.draw()
+    GameState.wall_manager:draw()
     draw_debug_info(GameState)
     draw_level(GameState.assets, GameState.level)
     GameState.ball:draw()

@@ -1,3 +1,4 @@
+WallManager = require 'src/wall_manager'
 module = {}
 
 function new() 
@@ -30,6 +31,7 @@ local GameState = {
         time_from_boot = 0,
         time_from_level = 0
     },
+    wall_manager = WallManager.new()
 }
 
 return GameState
