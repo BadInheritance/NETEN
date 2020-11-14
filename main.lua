@@ -7,11 +7,18 @@ local GameState = require "src/game_state"
 local printf = require "src/printf"
 local Level = require "src/level"
 local Functional = require "src/functional"
+local Physics = require "src/physics"
+local Window = require "src/window"
 
 GameState = GameState.new() 
 
 
 function love.load()
+    Window.init({
+        width=1000,
+        height=800
+    })
+
     FrameSet.set_debug_options({enable_debug_print=false})
 
     GameState.assets.framesets.idle_frames = FrameSet.load_spritesheet(
@@ -28,6 +35,8 @@ function love.load()
     ball.pos.x = 400
     ball.pos.y = 300
     GameState.ball = ball
+
+    Physics.init()
 end
 
 
@@ -75,6 +84,8 @@ end
 
 function love.draw()
     love.graphics.setBackgroundColor( 0.5, 0.5, 0.5, 1)
+
+    Physics.draw()
     draw_debug_info(GameState)
     draw_level(GameState.assets, GameState.level)
     GameState.ball:draw()
