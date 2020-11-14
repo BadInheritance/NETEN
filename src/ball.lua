@@ -29,7 +29,7 @@ end
 
 function Ball:on_collision(separating_vector)
     assert(self)
-    print("Separating vector: ", separating_vector:as_string())
+    -- print("Separating vector: ", separating_vector:as_string())
     if GMath.abs(separating_vector.y) > 0.1 then
         self.direction.y =  self.direction.y * -GMath.sign(separating_vector.y)
     end
@@ -132,10 +132,13 @@ Ball.states = {
         local delta = ball.pos - getMousePos()
 
         -- ball.direction = delta:heading()
+        local magnitude = delta:getmag()
         ball.direction = delta:norm()
 
-        local speed = 1000
-		ball.speed = delta:getmag() * speed
+        local max_speed = 1500
+        local slingshot_factor = magnitude * magnitude * 0.05
+        local speed = GMath.min(max_speed, slingshot_factor)
+		ball.speed = speed
 		ball:set_status('rolling')
 	    end
 	end

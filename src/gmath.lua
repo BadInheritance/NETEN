@@ -5,6 +5,9 @@ GMath  = {
     end,
     abs = function (x)
         return GMath.sign(x) * x
+    end,
+    min = function(x, y)
+        if x > y then return y else return x end
     end
 }
 
