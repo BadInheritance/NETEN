@@ -23,11 +23,11 @@ function love.load()
     FrameSet.set_debug_options({enable_debug_print=false})
 
     GameState.assets.framesets.idle_frames = FrameSet.load_spritesheet(
-	GameState.assets.images.sheet_ball_idle, 1, 6)
+    GameState.assets.images.sheet_ball_idle, 1, 6)
     GameState.assets.framesets.idle_frames.loop = true
 
     GameState.assets.framesets.transform_frames = FrameSet.load_spritesheet(
-	GameState.assets.images.sheet_ball_transform, 3, 3)
+    GameState.assets.images.sheet_ball_transform, 3, 3)
     GameState.assets.framesets.transform_frames.loop = false
 
 
@@ -35,6 +35,8 @@ function love.load()
     local ball = Ball()
     ball.pos.x = 400
     ball.pos.y = 300
+    ball.hole.x = 200
+    ball.hole.y = 200
     GameState.ball = ball
 
     Physics.init({debug_draw_enabled=true})
@@ -86,6 +88,10 @@ end
 
 function draw_level(assets, level)
     draw_doors(assets, level.content.doors)
+
+    love.graphics.setColor(0, 0, 0, 0.8)
+    love.graphics.circle("fill", 200, 200, 50)
+    love.graphics.setColor(255, 255, 255, 255)
 end
 
 function draw_debug_info(game_state)
