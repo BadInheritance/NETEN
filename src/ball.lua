@@ -20,6 +20,11 @@ function Ball:new()
     self.pos = Vector.new(100, 100)
     self.radius = 50
     self.shape = HC.circle(self.pos.x, self.pos.y, self.radius)
+
+    self.shape.collision = {
+        last_collision_t = 0
+    }
+
     self.selected = false
     self.direction = Vector.new(0.0, 0.0)
     self.speed = 0.0

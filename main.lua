@@ -39,9 +39,17 @@ function love.load()
     ball.hole.y = 200
     GameState.ball = ball
 
+    local ball2 = Ball()
+    ball2.pos.x = 600
+    ball2.pos.y = 500
+    ball2.hole.x = 800
+    ball2.hole.y = 700
+    GameState.ball2 = ball2
+
     Physics.init({debug_draw_enabled=true})
 
     Physics.add_collider(ball:as_collider())
+    Physics.add_collider(ball2:as_collider())
 
     window_size = Window:get_size()
     GameState.wall_manager:add_wall(0, 0, window_size.x, 20)
@@ -67,6 +75,7 @@ function love.update(dt)
     update_time(GameState, level_running, dt)
     Level.update_level(GameState.level)
     GameState.ball:update(dt)
+    GameState.ball2:update(dt)
 end
 
 
@@ -107,4 +116,5 @@ function love.draw()
     draw_debug_info(GameState)
     draw_level(GameState.assets, GameState.level)
     GameState.ball:draw()
+    GameState.ball2:draw()
 end
