@@ -1,7 +1,8 @@
 ---! ball
-Object = require("src/classic")
-Vector = require("src/vector")
-printf = require("src/printf")
+Object = require "src/classic"
+Vector = require "src/vector"
+printf = require "src/printf"
+DrawState = require "src/draw_state"
 GMath = require 'src/gmath'
 HC = require 'ext/HC'
 
@@ -73,10 +74,14 @@ function Ball:drawAimLine()
     target_x = self.pos.x + (self.pos.x - love.mouse.getX())
     target_y = self.pos.y + (self.pos.y - love.mouse.getY())
 
+
+    DrawState.push()
     love.graphics.setColor(244, 244, 244, 0.5)
     love.graphics.setLineWidth(8)
     love.graphics.line(self.pos.x, self.pos.y, target_x, target_y)
     love.graphics.setColor(244, 244, 244, 1)
+    DrawState.pop()
+
 end
 
 function Ball:update(...) 

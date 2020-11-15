@@ -1,6 +1,7 @@
 Functional = require 'src/functional'
 printf = require 'src/printf'
 Window = require 'src/window'
+DrawState = require 'src/draw_state'
 HC = require 'ext/HC'
 
 Physics = {
@@ -20,11 +21,13 @@ function Physics:draw_debug_rect(rect)
     rect:draw(mode)
 end
 
-function Physics:draw() 
+function Physics:draw()
+    DrawState:push()
     if self.debug_draw_enabled then
         local draw_debug_rect = function (x) self:draw_debug_rect(x) end
         Functional.foreach(self.rects, draw_debug_rect)
     end
+    DrawState:pop()
 end
 
 function Physics:add_rectangle(...)
@@ -50,8 +53,6 @@ function Physics:update(dt)
             x, y = collider.shape:center()
             separating_vector = Vector.new(delta.x, delta.y)
             collider.on_collision(separating_vector)
-            -- text[#text+1] = string.format("Colliding. Separating vector = (%s,%s)",
-            --                               delta.x, delta.y)
         end
     end
 end

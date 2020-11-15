@@ -1,4 +1,5 @@
 Functional = require "src/functional"
+DrawState = require "src/draw_state"
 module = {}
 
 local WallManager = {}
@@ -30,13 +31,19 @@ function WallManager:add_wall(x, y, w, h)
     table.insert(self.walls, wall)
 end
 
-function WallManager:draw()
+function WallManager:draw_walls()
     Functional.foreach(self.walls, function(wall)
         mode = "fill"
         love.graphics.setColor(200, 200, 0, 255)
         love.graphics.rectangle(mode, wall.x, wall.y, wall.w, wall.h)
         love.graphics.setColor(255, 255, 255, 255)
     end)
+end
+
+function WallManager:draw()
+    DrawState:push()
+    self:draw_walls()
+    DrawState:pop()
 end
 
 module.new = new
